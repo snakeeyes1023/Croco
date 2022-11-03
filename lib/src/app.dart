@@ -1,4 +1,4 @@
-import 'package:croco/src/services/commonCache.dart';
+import 'package:croco/src/services/synchronizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,11 +13,11 @@ import 'settings/settings_view.dart';
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
   MyApp({super.key, required this.settingsController}) {
-    commonCache = CommonCache();
+    Synchronizer syncro = new Synchronizer();
+    syncro.insertInDb();
   }
 
   final SettingsController settingsController;
-  late final CommonCache commonCache;
 
   @override
   Widget build(BuildContext context) {
@@ -69,17 +69,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute<void>(
               settings: routeSettings,
               builder: (BuildContext context) {
-                switch (routeSettings.name) {
-                  case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-                  case Home.routeName:
-                    return Home(
-                      commonCache: commonCache,
-                    );
-                  case SampleItemListView.routeName:
-                  default:
-                    return const SampleItemListView();
-                }
+                return Home();
               },
             );
           },

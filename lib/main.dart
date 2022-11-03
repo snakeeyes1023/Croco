@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'src/app.dart';
-import 'src/services/commonCache.dart';
+import 'src/services/synchronizer.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 
@@ -19,5 +19,7 @@ void main() async {
   // Run the app and pass in the SettingsController. The app listens to the
   // SettingsController for changes, then passes it further down to the
 
+  Synchronizer syncro = new Synchronizer();
+  await syncro.insertInDb();
   runApp(MyApp(settingsController: settingsController));
 }

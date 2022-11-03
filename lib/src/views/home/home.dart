@@ -1,4 +1,3 @@
-import 'package:croco/src/services/commonCache.dart';
 import 'package:croco/src/views/shared/carouselMovies.dart';
 import 'package:croco/src/views/shared/sidebar.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +8,11 @@ import 'package:m3u/m3u.dart';
 class Home extends StatefulWidget {
   static const routeName = '/';
 
-  CommonCache commonCache;
   List<M3uGenericEntry> topMovies = [];
   List<M3uGenericEntry> newMovies = [];
   List<M3uGenericEntry> fourKMovies = [];
 
-  Home({Key? key, required this.commonCache}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   HomeState createState() => HomeState();
@@ -25,7 +23,7 @@ class HomeState extends State<Home> {
   final CarouselController buttonCarouselController = CarouselController();
 
   void getMovies() {
-    widget.commonCache.getGroup("top 25").then((value) => {
+    /*widget.commonCache.getGroup("top 25").then((value) => {
           setState(() {
             widget.topMovies = value.take(10).toList();
           })
@@ -41,22 +39,23 @@ class HomeState extends State<Home> {
           setState(() {
             widget.fourKMovies = value.take(10).toList();
           })
-        });
-  }
-
-  @override
-  void initState() {
-    super.initState();
+        });*/
   }
 
   @override
   Widget build(BuildContext context) {
-    getMovies();
-
-    return FutureBuilder<CommonCache>(
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+/*
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<>(
       future: widget.commonCache.fillCache(forceRefresh: true),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          getMovies();
+
           return Scaffold(
               appBar: AppBar(
                 title: Text('Croco'),
@@ -69,7 +68,7 @@ class HomeState extends State<Home> {
                   )
                 ],
               ),
-              drawer: Sidebar(commonCache: widget.commonCache),
+              drawer: Sidebar(),
               body: ListView(
                 children: [
                   Column(
@@ -77,11 +76,11 @@ class HomeState extends State<Home> {
                       CarouselMovies(
                           content: widget.topMovies,
                           sectionName: "Derniers ajouts"),
-                      CarouselMovies(
+                      /*CarouselMovies(
                           content: widget.newMovies, sectionName: "Nouveautés"),
                       CarouselMovies(
                           content: widget.fourKMovies,
-                          sectionName: "Film en 4k"),
+                          sectionName: "Film en 4k"),*/
                     ],
                   ),
                 ],
@@ -91,5 +90,5 @@ class HomeState extends State<Home> {
         }
       },
     );
-  }
+  }*/
 }

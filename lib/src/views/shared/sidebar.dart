@@ -1,11 +1,8 @@
-import 'package:croco/src/services/commonCache.dart';
 import 'package:croco/src/services/enums/M3UcontentType.dart';
 import 'package:flutter/material.dart';
 
 class Sidebar extends StatefulWidget {
-  Sidebar({Key? key, required this.commonCache}) : super(key: key);
-
-  CommonCache commonCache;
+  Sidebar({Key? key}) : super(key: key);
 
   @override
   SidebarState createState() => SidebarState();
@@ -17,6 +14,12 @@ class SidebarState extends State<Sidebar> {
     super.initState();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+/*
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -49,4 +52,5 @@ class SidebarState extends State<Sidebar> {
       ),
     );
   }
+  */
 }
