@@ -30,12 +30,37 @@ class Synchronizer {
     // get export m3u
     var m3uLinks = await exportM3u();
 
+    /*!SECTION: INSERTION */
+    // test insert
     var conn = await MySqlConnection.connect(connectionSettings);
 
-    await conn.queryMulti(
-        "INSERT INTO movies (name, link, group) VALUES (?, ?, ?)",
-        [getContentByType(M3UContentType.Movie, await m3uLinks)]);
+    // insert all m3ulimks in db
+    for (var m3uLink in m3uLinks) {
+      // get the content type
 
+      // insert the link in db
+      await conn.query(
+          'INSERT INTO Movie (title, link, poster) VALUES (?, ?, ?)',
+          [m3uLink.title, m3uLink.link, "none"]);
+    }
+
+/*
+    var conn = await MySqlConnection.connect(connectionSettings);
+    await conn.query("INSERT INTO Movie (title, link, poster) VALUES (?, ?, ?)",
+        [m3uLinks[1].title, m3uLinks[1].link, "aucun"]);
+
+    // insert all movies
+    var movies = getContentByType(M3UContentType.Movie, await m3uLinks);
+
+    movies.forEach((element) async {
+      var conn = await MySqlConnection.connect(connectionSettings);
+
+      await conn.query(
+          "INSERT INTO Movie (title, link, poster) VALUES (?, ?, ?)",
+          [element.title, element.link, "aucun"]);
+
+      await conn.close();
+    });
     await conn.queryMulti(
         "INSERT INTO series (name, link, group) VALUES (?, ?, ?)",
         [getContentByType(M3UContentType.Series, await m3uLinks)]);
@@ -43,8 +68,7 @@ class Synchronizer {
     await conn.queryMulti(
         "INSERT INTO tvChannels (name, link, group) VALUES (?, ?, ?)",
         [getContentByType(M3UContentType.TvShow, await m3uLinks)]);
-
-    await conn.close();
+  */
   }
 
   /**
