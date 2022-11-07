@@ -12,6 +12,17 @@ class HorizontalCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(title,
+              style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black)),
+        ),
+      ),
       Container(
         height: MediaQuery.of(context).size.height * 0.40,
         child: ListView.builder(

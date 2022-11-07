@@ -29,31 +29,18 @@ class _Home extends State<Home> {
                     color: Colors.black)),
           ),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text("Derniés ajoutés",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black))),
-            FutureBuilder(
-              future: widget.movieService.getLastMovies(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: Image.asset('assets/images/loading.gif'),
-                  );
-                } else {
-                  return HorizontalCards(snapshot.data, "Derniés ajoutés");
-                }
-              },
-            )
-          ],
-        ),
+        FutureBuilder(
+          future: widget.movieService.getLastMovies(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Image.asset('assets/images/loading.gif'),
+              );
+            } else {
+              return HorizontalCards(snapshot.data, "Derniés ajoutés");
+            }
+          },
+        )
       ],
     ));
   }
