@@ -19,9 +19,9 @@ void main() async {
   // Run the app and pass in the SettingsController. The app listens to the
   // SettingsController for changes, then passes it further down to the
   WidgetsFlutterBinding.ensureInitialized();
-
+/*
   Synchronizer syncro = new Synchronizer();
   await syncro.insertInDb();
-
+*/
   runApp(MyApp(settingsController: settingsController));
 }

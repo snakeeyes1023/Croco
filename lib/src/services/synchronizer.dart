@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'package:m3u/m3u.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mysql1/mysql1.dart';
-import 'enums/M3UcontentType.dart';
+import 'enums/content_type_enum.dart';
 
 class Synchronizer {
   late ConnectionSettings connectionSettings;
@@ -17,9 +16,7 @@ class Synchronizer {
         db: 'jonath37_CrocoBeta');
   }
 
-  /**
-   * Read the m3u files and return the all movies
-   */
+  /// Read the m3u files and return the all movies
   Future<List<M3uGenericEntry>> exportM3u() async {
     final source = await rootBundle.loadString('assets/m3ufile.m3u');
     //final source = ""
@@ -28,55 +25,27 @@ class Synchronizer {
 
   Future<void> insertInDb() async {
     // get export m3u
-    var m3uLinks = await exportM3u();
+    var m3uLinks = exportM3u();
 
-    /*!SECTION: INSERTION */
-    // test insert
+    Iterable<List<Object?>> movieToInsert =
+        getContentByType(ContentTypeEnum.movie, await m3uLinks)
+            .map((e) => [e.title, e.link, e.attributes['tvg-logo']])
+            .toList();
+
     var conn = await MySqlConnection.connect(connectionSettings);
 
-    // insert all m3ulimks in db
-    for (var m3uLink in m3uLinks) {
-      // get the content type
-
-      // insert the link in db
-      await conn.query(
-          'INSERT INTO Movie (title, link, poster) VALUES (?, ?, ?)',
-          [m3uLink.title, m3uLink.link, "none"]);
-    }
-
-/*
-    var conn = await MySqlConnection.connect(connectionSettings);
-    await conn.query("INSERT INTO Movie (title, link, poster) VALUES (?, ?, ?)",
-        [m3uLinks[1].title, m3uLinks[1].link, "aucun"]);
-
-    // insert all movies
-    var movies = getContentByType(M3UContentType.Movie, await m3uLinks);
-
-    movies.forEach((element) async {
-      var conn = await MySqlConnection.connect(connectionSettings);
-
-      await conn.query(
-          "INSERT INTO Movie (title, link, poster) VALUES (?, ?, ?)",
-          [element.title, element.link, "aucun"]);
-
-      await conn.close();
-    });
+    // movie in db
     await conn.queryMulti(
-        "INSERT INTO series (name, link, group) VALUES (?, ?, ?)",
-        [getContentByType(M3UContentType.Series, await m3uLinks)]);
+        'INSERT INTO Movie (title, link, poster) VALUES (?, ?, ?)',
+        movieToInsert);
 
-    await conn.queryMulti(
-        "INSERT INTO tvChannels (name, link, group) VALUES (?, ?, ?)",
-        [getContentByType(M3UContentType.TvShow, await m3uLinks)]);
-  */
+    await conn.close();
   }
 
-  /**
-   * Filter the content to get only the type pass in parameter
-   */
+  /// Filter the content to get only the type pass in parameter
   List<M3uGenericEntry> getContentByType(
-      M3UContentType contentType, List<M3uGenericEntry> contents) {
-    if (contentType == M3UContentType.Movie) {
+      ContentTypeEnum contentType, List<M3uGenericEntry> contents) {
+    if (contentType == ContentTypeEnum.movie) {
       return contents
           .where((element) => element.attributes["group-title"]!
               .toLowerCase()
@@ -84,7 +53,7 @@ class Synchronizer {
           .toList();
     }
 
-    if (contentType == M3UContentType.Series) {
+    if (contentType == ContentTypeEnum.series) {
       return contents
           .where((element) =>
               element.attributes["group-title"]!
@@ -94,13 +63,13 @@ class Synchronizer {
           .toList();
     }
 
-    if (contentType == M3UContentType.TvShow) {
+    if (contentType == ContentTypeEnum.tvShow) {
       return contents
           .where((element) =>
               element.attributes["tvg-id"]!.toLowerCase().isNotEmpty)
           .toList();
     }
 
-    throw new Exception("type de contentnu non implémenté");
+    throw Exception("type de contentnu non implémenté");
   }
 }
