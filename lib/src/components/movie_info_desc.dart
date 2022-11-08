@@ -3,13 +3,34 @@ import 'package:flutter/material.dart';
 import '../models/movie.dart';
 import 'custom_button.dart';
 
-class MovieInfoDesc extends StatelessWidget {
+class MovieInfoDesc extends StatefulWidget {
   const MovieInfoDesc(
     this.movie, {
     Key? key,
   }) : super(key: key);
 
   final Movie movie;
+
+  @override
+  State<MovieInfoDesc> createState() => _MovieInfoDesc();
+}
+
+class _MovieInfoDesc extends State<MovieInfoDesc> {
+  Future<void> fetchMovieInfo() async {
+    if (widget.movie.tmdbMovie == null) {
+      await widget.movie.searchOnTheMovieDatabase();
+
+      if (widget.movie.tmdbMovie != null) {
+        setState(() {});
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMovieInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +46,17 @@ class MovieInfoDesc extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //NOTE - title
-            Text(movie.splittedTitle, style: textStyleTitle),
+            Text(widget.movie.splittedTitle, style: textStyleTitle),
             const Padding(padding: EdgeInsets.only(top: 20.0)),
             //NOTE - Description
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("Description", style: textStyle),
-                Text(movie.link, style: textStyle),
+                Text(
+                    widget.movie.tmdbMovie?["overview"] ??
+                        "Aucune description trouvé pour ce film",
+                    style: textStyle),
               ],
             ),
 

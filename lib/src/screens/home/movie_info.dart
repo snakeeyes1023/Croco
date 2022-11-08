@@ -33,6 +33,19 @@ class _MovieInfo extends State<MovieInfo> {
     return hslDark.toColor();
   }
 
+  Future<void> fetchMoviePreview() async {
+    if (widget.movie.previewLink == "") {
+      await widget.movie.searchMoviePreviewLink();
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMoviePreview();
+  }
+
   @override
   Widget build(BuildContext context) {
     final String posterPath = widget.movie.poster;
@@ -80,7 +93,23 @@ class _MovieInfo extends State<MovieInfo> {
                                       color: Colors.black, width: 2)),
                               splashColor: Colors.black, // Splash color
                               onTap: () {
-                                widget.movie.searchOnTheMovieDatabase();
+                                // show a popup
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Preview'),
+                                        content: Container(
+                                            height: 300,
+                                            width: 300,
+                                            child: widget.movie.previewLink ==
+                                                    ""
+                                                ? const Text(
+                                                    "Aucune preview trouvé pour ce film")
+                                                : Text(
+                                                    widget.movie.previewLink)),
+                                      );
+                                    });
                               },
                               child: const SizedBox(
                                   width: 60,
