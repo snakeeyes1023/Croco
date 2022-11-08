@@ -62,7 +62,7 @@ class _MovieInfoDesc extends State<MovieInfoDesc> {
 
             const Padding(padding: EdgeInsets.only(top: 20.0)),
             //NOTE - Button to add to favorites ( outline button black )
-            const CustomButton("+ Add to favorites")
+            const CustomButton("+ Add to favorites", Colors.black, false)
           ],
         ));
   }
