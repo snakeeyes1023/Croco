@@ -79,7 +79,9 @@ class _MovieInfo extends State<MovieInfo> {
                                   side: BorderSide(
                                       color: Colors.black, width: 2)),
                               splashColor: Colors.black, // Splash color
-                              onTap: () {},
+                              onTap: () {
+                                widget.movie.searchOnTheMovieDatabase();
+                              },
                               child: const SizedBox(
                                   width: 60,
                                   height: 60,
