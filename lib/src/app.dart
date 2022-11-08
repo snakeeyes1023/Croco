@@ -1,4 +1,5 @@
 import 'package:croco/src/screens/configuration/configuration.dart';
+import 'package:croco/src/screens/favorite/favorite.dart';
 import 'package:croco/src/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,7 +12,7 @@ class MyApp extends StatefulWidget {
 
   late SettingsController settingsController;
   Widget selectedPage = Home();
-
+  int selectedIndex = 0;
   @override
   State<MyApp> createState() => _MyApp();
 }
@@ -20,10 +21,12 @@ class MyApp extends StatefulWidget {
 class _MyApp extends State<MyApp> {
   void _onItemTapped(int index) {
     setState(() {
+      widget.selectedIndex = index;
+
       if (index == 0) {
         widget.selectedPage = Home();
       } else if (index == 1) {
-        widget.selectedPage = Configuration();
+        widget.selectedPage = Favorite();
       } else if (index == 2) {
         widget.selectedPage = Configuration();
       }
@@ -60,14 +63,14 @@ class _MyApp extends State<MyApp> {
               builder: (BuildContext context) {
                 return Scaffold(
                   bottomNavigationBar: BottomNavigationBar(
-                    currentIndex: 0,
+                    currentIndex: widget.selectedIndex,
                     items: const [
                       BottomNavigationBarItem(
                         icon: Icon(Icons.movie_outlined),
                         label: 'Films',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.heart_broken_outlined),
+                        icon: Icon(Icons.favorite_outline),
                         label: 'Favoris',
                       ),
                       BottomNavigationBarItem(

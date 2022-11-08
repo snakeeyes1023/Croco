@@ -42,7 +42,7 @@ class _Home extends State<Home> {
           },
         ),
         FutureBuilder(
-          future: widget.movieService.getFourKMovies(),
+          future: widget.movieService.getFirstMovies(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -50,6 +50,42 @@ class _Home extends State<Home> {
               );
             } else {
               return HorizontalCards(snapshot.data, "Films en 4k");
+            }
+          },
+        ),
+        FutureBuilder(
+          future: widget.movieService.getRandomMovies(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Image.asset('assets/images/loading.gif'),
+              );
+            } else {
+              return HorizontalCards(snapshot.data, "Films choisi pour vous");
+            }
+          },
+        ),
+        FutureBuilder(
+          future: widget.movieService.getRandomMovies(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Image.asset('assets/images/loading.gif'),
+              );
+            } else {
+              return HorizontalCards(snapshot.data, "Films choisi pour vous");
+            }
+          },
+        ),
+        FutureBuilder(
+          future: widget.movieService.getRandomMovies(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Image.asset('assets/images/loading.gif'),
+              );
+            } else {
+              return HorizontalCards(snapshot.data, "Films choisi pour vous");
             }
           },
         )
