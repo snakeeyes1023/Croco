@@ -1,5 +1,7 @@
 import 'package:croco/src/models/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:palette_generator/palette_generator.dart';
+import '../../components/movie_info_desc.dart';
 
 class MovieInfo extends StatefulWidget {
   MovieInfo(this.movie, {super.key});
@@ -11,48 +13,85 @@ class MovieInfo extends StatefulWidget {
 }
 
 class _MovieInfo extends State<MovieInfo> {
+  Future<Color> getBgColor() async {
+    var paletteGenerator = await PaletteGenerator.fromImageProvider(
+      Image.network(widget.movie.poster).image,
+    );
+
+    //return best color background with a dark filter
+    return darken(
+        paletteGenerator.dominantColor?.color ?? Colors.black.withOpacity(0.7),
+        0.1);
+  }
+
+  Color darken(Color color, [double amount = .1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(color);
+    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+
+    return hslDark.toColor();
+  }
+
   @override
   Widget build(BuildContext context) {
     final String posterPath = widget.movie.poster;
-
-    return Container(
-        child: Scaffold(
-      // back button
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+    return Scaffold(
+        // back button
+        appBar: AppBar(
+          foregroundColor: const Color.fromRGBO(0, 0, 0, 1),
+          backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+          shadowColor: const Color.fromRGBO(255, 255, 255, 1),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
-        title: Text(widget.movie.title),
-      ),
-      body: SingleChildScrollView(
-          child: Card(
-              elevation: 4.0,
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text(widget.movie.title),
-                    subtitle: Text("Aucune description "),
-                    trailing: Icon(Icons.favorite_outline),
-                  ),
-                  Container(
-                    height: 200.0,
-                    child: FadeInImage.assetNetwork(
-                        placeholder: 'assets/images/loading.gif',
-                        image: posterPath),
-                  ),
-                  /*child: Ink.image(
-                      image: NetworkImage(widget.movie.poster),
-                      fit: BoxFit.cover,
-                    ),*/
-
-                  Container(
-                    padding: EdgeInsets.all(16.0),
-                    alignment: Alignment.centerLeft,
-                    child: Text("Supporter"),
-                  ),
-                ],
-              ))),
-    ));
+        body: SingleChildScrollView(
+            child: Column(children: [
+          FutureBuilder<Color>(
+              future: getBgColor(), // async work
+              builder: (BuildContext context, AsyncSnapshot<Color> snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                      height: 300,
+                      width: double.infinity,
+                      color: Colors.black.withOpacity(0.7));
+                } else {
+                  return Stack(children: [
+                    Container(
+                      alignment: Alignment.center,
+                      height: 300.0,
+                      decoration: BoxDecoration(color: snapshot.data),
+                      padding: const EdgeInsets.all(16.0),
+                      child: FadeInImage.assetNetwork(
+                          placeholder: 'assets/images/loading.gif',
+                          image: posterPath),
+                    ),
+                    Positioned(
+                        top: 220,
+                        left: 12,
+                        child: ClipOval(
+                          child: Material(
+                            color: Colors.white,
+                            child: InkWell(
+                              customBorder: const CircleBorder(
+                                  side: BorderSide(
+                                      color: Colors.black, width: 2)),
+                              splashColor: Colors.black, // Splash color
+                              onTap: () {},
+                              child: const SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: Icon(Icons.play_arrow)),
+                            ),
+                          ),
+                        )),
+                    //button play
+                  ]);
+                }
+              }),
+          MovieInfoDesc(widget.movie),
+        ])));
   }
 }

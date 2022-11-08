@@ -1,23 +1,44 @@
+import 'package:croco/src/screens/configuration/configuration.dart';
 import 'package:croco/src/screens/home/home.dart';
-import 'package:croco/src/services/synchronizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
+import 'package:flutter/services.dart';
+
+class MyApp extends StatefulWidget {
+  MyApp(this.settingsController, {super.key});
+
+  late SettingsController settingsController;
+  Widget selectedPage = Home();
+
+  @override
+  State<MyApp> createState() => _MyApp();
+}
 
 /// The Widget that configures your application.
-class MyApp extends StatelessWidget {
-  MyApp({super.key, required this.settingsController}) {}
-
-  final SettingsController settingsController;
+class _MyApp extends State<MyApp> {
+  void _onItemTapped(int index) {
+    setState(() {
+      if (index == 0) {
+        widget.selectedPage = Home();
+      } else if (index == 1) {
+        widget.selectedPage = Configuration();
+      } else if (index == 2) {
+        widget.selectedPage = Configuration();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+
     return AnimatedBuilder(
-      animation: settingsController,
+      animation: widget.settingsController,
       builder: (BuildContext context, Widget? child) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           restorationScopeId: 'app',
           localizationsDelegates: const [
             AppLocalizations.delegate,
@@ -32,7 +53,7 @@ class MyApp extends StatelessWidget {
               AppLocalizations.of(context)!.appTitle,
           theme: ThemeData(),
           darkTheme: ThemeData.light(),
-          themeMode: settingsController.themeMode,
+          themeMode: widget.settingsController.themeMode,
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,
@@ -53,10 +74,11 @@ class MyApp extends StatelessWidget {
                           icon: Icon(Icons.settings_accessibility_outlined),
                           label: 'Configuration')
                     ],
+                    onTap: _onItemTapped, //New
                   ),
 
                   // return current route
-                  body: routeSettings.name == "Films" ? Home() : Home(),
+                  body: widget.selectedPage,
                 );
               },
             );

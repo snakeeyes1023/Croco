@@ -21,10 +21,10 @@ class _Home extends State<Home> {
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8.0, top: 40.0, bottom: 40),
             child: const Text("Croco",
                 style: TextStyle(
-                    fontSize: 30.0,
+                    fontSize: 40.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.black)),
           ),
@@ -38,6 +38,18 @@ class _Home extends State<Home> {
               );
             } else {
               return HorizontalCards(snapshot.data, "Derniés ajoutés");
+            }
+          },
+        ),
+        FutureBuilder(
+          future: widget.movieService.getFourKMovies(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Image.asset('assets/images/loading.gif'),
+              );
+            } else {
+              return HorizontalCards(snapshot.data, "Films en 4k");
             }
           },
         )
