@@ -28,12 +28,22 @@ class MovieService {
             value.map((e) => Movie(e[0], e[1], e[2], e[3])).toList());
   }
 
-  Future<List<Movie>> getFourKMovies() async {
+  Future<List<Movie>> getFirstMovies() async {
     var conn = await MySqlConnection.connect(connectionSettings);
 
     return await conn
         .query(
             'SELECT id, title, link, poster FROM Movie ORDER BY id ASC LIMIT 10 ')
+        .then((value) =>
+            value.map((e) => Movie(e[0], e[1], e[2], e[3])).toList());
+  }
+
+  Future<List<Movie>> getRandomMovies() async {
+    var conn = await MySqlConnection.connect(connectionSettings);
+
+    return await conn
+        .query(
+            'SELECT id, title, link, poster FROM Movie ORDER BY RAND() LIMIT 10')
         .then((value) =>
             value.map((e) => Movie(e[0], e[1], e[2], e[3])).toList());
   }
