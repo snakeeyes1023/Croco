@@ -31,22 +31,25 @@ class HorizontalCards extends StatelessWidget {
           itemBuilder: (context, index) {
             final String posterPath = movieData[index].poster;
             return Card(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) {
-                        return MovieInfo(movieData[index]);
-                      },
-                    ),
-                  );
+                child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) {
+                      return MovieInfo(movieData[index]);
+                    },
+                  ),
+                );
+              },
+              child: FadeInImage.assetNetwork(
+                placeholder: 'assets/images/loading.gif',
+                image: posterPath,
+                imageErrorBuilder: (context, error, stackTrace) {
+                  return Image.asset('assets/images/loading.gif');
                 },
-                child: FadeInImage.assetNetwork(
-                    placeholder: 'assets/images/loading.gif',
-                    image: posterPath),
               ),
-            );
+            ));
           },
         ),
       )

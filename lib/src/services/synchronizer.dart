@@ -3,6 +3,7 @@ import 'package:m3u/m3u.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mysql1/mysql1.dart';
 import 'enums/content_type_enum.dart';
+import 'package:dio/dio.dart';
 
 class Synchronizer {
   late ConnectionSettings connectionSettings;
@@ -16,16 +17,25 @@ class Synchronizer {
         db: 'jonath37_CrocoBeta');
   }
 
-  /// Read the m3u files and return the all movies
-  Future<List<M3uGenericEntry>> exportM3u() async {
-    final source = await rootBundle.loadString('assets/m3ufile.m3u');
-    //final source = ""
-    return await M3uParser.parse(source);
+  Future addNewLink(linkM3U) async {
+    var conn = await MySqlConnection.connect(connectionSettings);
+
+    await conn.query('INSERT INTO M3ULink (link) VALUES (?)', linkM3U);
+
+    await conn.close();
+
+    await exportM3u(linkM3U);
   }
 
-  Future<void> insertInDb() async {
+  /// Read the m3u files and return the all movies
+  Future<List<M3uGenericEntry>> exportM3u(m3uUrl) async {
+    var response = await Dio().get(m3uUrl);
+    return await M3uParser.parse(response.toString());
+  }
+
+  Future<void> insertInDb(m3uUrl) async {
     // get export m3u
-    var m3uLinks = exportM3u();
+    var m3uLinks = exportM3u(m3uUrl);
 
     Iterable<List<Object?>> movieToInsert =
         getContentByType(ContentTypeEnum.movie, await m3uLinks)

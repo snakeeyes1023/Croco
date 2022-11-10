@@ -1,4 +1,5 @@
 import 'package:croco/src/models/movie.dart';
+import 'package:croco/src/screens/player/player.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import '../../components/movie_info_desc.dart';
@@ -98,17 +99,17 @@ class _MovieInfo extends State<MovieInfo> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Preview'),
-                                        content: Container(
-                                            height: 300,
-                                            width: 300,
-                                            child: widget.movie.previewLink ==
-                                                    ""
-                                                ? const Text(
-                                                    "Aucune preview trouvé pour ce film")
-                                                : Text(
-                                                    widget.movie.previewLink)),
-                                      );
+                                          title: const Text('Preview'),
+                                          content: Container(
+                                              height: 300,
+                                              width: 300,
+                                              child: Column(children: [
+                                                widget.movie.link == ""
+                                                    ? const Text(
+                                                        "Aucune preview trouvé pour ce film")
+                                                    : MyPlayer(
+                                                        widget.movie.link)
+                                              ])));
                                     });
                               },
                               child: const SizedBox(
