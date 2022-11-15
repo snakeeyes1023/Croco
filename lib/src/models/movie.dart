@@ -5,6 +5,7 @@ class Movie {
   final String link;
   final String poster;
   final int id;
+
   dynamic tmdbMovie;
   String previewLink = "";
 

@@ -35,20 +35,18 @@ class _Favorite extends State<Favorite> {
                     color: Colors.black)),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(25),
-          child:
-              //text + input + button to add a new link to the database
-              Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Ajouter un nouveau lien", style: textStyle),
-              const Padding(padding: EdgeInsets.only(top: 10)),
-              const Padding(padding: EdgeInsets.only(top: 10)),
-              const CustomPlainButton("Ajouter à la liste de lien", true)
-            ],
-          ),
-        )
+        FutureBuilder(
+          future: widget.movieService.getFirstMovies(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Image.asset('assets/images/loading.gif'),
+              );
+            } else {
+              return HorizontalCards(snapshot.data, "Favorie");
+            }
+          },
+        ),
       ],
     ));
   }

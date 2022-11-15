@@ -2,6 +2,10 @@ import 'package:croco/src/models/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import '../../components/movie_info_desc.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
+
+import '../player/player.dart';
 
 class MovieInfo extends StatefulWidget {
   MovieInfo(this.movie, {super.key});
@@ -44,6 +48,27 @@ class _MovieInfo extends State<MovieInfo> {
   void initState() {
     super.initState();
     fetchMoviePreview();
+  }
+
+  Future<void> _launchURL() async {
+    // Mettre a false pour ouvrir le vrai film hihi
+    bool showPreview = false;
+
+    var movieUrl = widget.movie.previewLink;
+
+    if (!showPreview) {
+      movieUrl = widget.movie.link;
+    }
+
+    //open player.dart
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) {
+          return Player(movieUrl);
+        },
+      ),
+    );
   }
 
   @override
@@ -93,23 +118,8 @@ class _MovieInfo extends State<MovieInfo> {
                                       color: Colors.black, width: 2)),
                               splashColor: Colors.black, // Splash color
                               onTap: () {
-                                // show a popup
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Preview'),
-                                        content: Container(
-                                            height: 300,
-                                            width: 300,
-                                            child: widget.movie.previewLink ==
-                                                    ""
-                                                ? const Text(
-                                                    "Aucune preview trouvé pour ce film")
-                                                : Text(
-                                                    widget.movie.previewLink)),
-                                      );
-                                    });
+                                // open movie preview
+                                _launchURL();
                               },
                               child: const SizedBox(
                                   width: 60,

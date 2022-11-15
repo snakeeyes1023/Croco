@@ -7,7 +7,7 @@ class CustomInput extends StatelessWidget {
   final TextEditingController controller;
   //button text
   static const textStyleButton = TextStyle(
-      fontSize: 14.0, fontWeight: FontWeight.w900, color: Colors.white);
+      fontSize: 14.0, fontWeight: FontWeight.w900, color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
