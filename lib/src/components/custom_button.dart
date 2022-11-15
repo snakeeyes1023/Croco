@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton(this.text, this.borderColor, this.fullWidth, {Key? key})
+  const CustomButton(
+      this.text, this.borderColor, this.fullWidth, this.onPressed,
+      {Key? key})
       : super(key: key);
 
   final String text;
   final bool fullWidth;
   final Color borderColor;
+  final Function onPressed;
   //button text
   static const textStyleButton = TextStyle(
       fontSize: 14.0, fontWeight: FontWeight.w900, color: Colors.white);
@@ -14,7 +17,9 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-        onPressed: () {},
+        onPressed: () {
+          onPressed();
+        },
         style: ButtonStyle(
             minimumSize: MaterialStateProperty.all<Size>(fullWidth
                 ? const Size(double.infinity, 50.0)

@@ -1,15 +1,17 @@
+import 'package:croco/src/services/movie_service.dart';
 import 'package:flutter/material.dart';
 
 import '../models/movie.dart';
 import 'custom_button.dart';
 
 class MovieInfoDesc extends StatefulWidget {
-  const MovieInfoDesc(
+  MovieInfoDesc(
     this.movie, {
     Key? key,
   }) : super(key: key);
 
   final Movie movie;
+  final MovieService movieService = MovieService();
 
   @override
   State<MovieInfoDesc> createState() => _MovieInfoDesc();
@@ -62,7 +64,8 @@ class _MovieInfoDesc extends State<MovieInfoDesc> {
 
             const Padding(padding: EdgeInsets.only(top: 20.0)),
             //NOTE - Button to add to favorites ( outline button black )
-            const CustomButton("+ Add to favorites", Colors.black, false)
+            CustomButton("+ Add to favorites", Colors.black, false,
+                () => {widget.movieService.addMovieToFavorite(widget.movie)}),
           ],
         ));
   }

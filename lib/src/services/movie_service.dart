@@ -47,4 +47,21 @@ class MovieService {
         .then((value) =>
             value.map((e) => Movie(e[0], e[1], e[2], e[3])).toList());
   }
+
+  Future<List<Movie>> getFavoriteMovies() async {
+    return getRandomMovies();
+  }
+
+  Future<void> addMovieToFavorite(Movie movie) async {
+    var conn = await MySqlConnection.connect(connectionSettings);
+
+    await conn
+        .query('INSERT INTO FavoriteMovie (movieId) VALUES (?)', [movie.id]);
+  }
+
+  Future<void> deleteAllFavoriteMovies() async {
+    var conn = await MySqlConnection.connect(connectionSettings);
+
+    await conn.query('DELETE FROM FavoriteMovie');
+  }
 }

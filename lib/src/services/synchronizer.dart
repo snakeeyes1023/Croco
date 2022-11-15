@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:m3u/m3u.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:mysql1/mysql1.dart';
 import 'enums/content_type_enum.dart';
 import 'package:dio/dio.dart';
@@ -17,7 +16,7 @@ class Synchronizer {
         db: 'jonath37_CrocoBeta');
   }
 
-  Future addNewLink(linkM3U) async {
+  Future<void> addNewLink(linkM3U) async {
     var conn = await MySqlConnection.connect(connectionSettings);
 
     await conn.query('INSERT INTO M3ULink (link) VALUES (?)', linkM3U);
