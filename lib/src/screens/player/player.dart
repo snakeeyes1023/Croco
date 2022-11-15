@@ -1,29 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-///import 'package:neeko/neeko.dart';
-
-class MyPlayer extends StatefulWidget {
-  final String url;
-  //late VideoControllerWrapper videoControllerWrapper;
-
-  MyPlayer(this.url, {super.key}) {}
+class Player extends StatefulWidget {
+  final String _url;
+  Player(this._url);
 
   @override
-  State<MyPlayer> createState() => _MyPlayer();
+  _Player createState() => _Player();
 }
 
-class _MyPlayer extends State<MyPlayer> {
+class _Player extends State<Player> {
   @override
-  void dispose() {
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text("Player"),
-      ),
+    return WebView(
+      javascriptMode: JavascriptMode.unrestricted,
+      initialUrl: widget._url,
     );
   }
 }
