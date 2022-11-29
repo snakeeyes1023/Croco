@@ -1,16 +1,12 @@
-import 'package:croco/src/components/custom_button.dart';
-import 'package:croco/src/components/custom_input.dart';
-import 'package:croco/src/components/custom_plain_button.dart';
+import 'package:croco/src/services/favorite_service.dart';
 import 'package:flutter/material.dart';
-
-import '../../components/movie_scroll.dart';
 import '../../services/movie_service.dart';
 import '../home/movie_info.dart';
 
 class Favorite extends StatefulWidget {
   Favorite({super.key});
 
-  MovieService movieService = MovieService();
+  FavoriteService movieService = FavoriteService();
 
   @override
   State<Favorite> createState() => _Favorite();
@@ -37,7 +33,7 @@ class _Favorite extends State<Favorite> {
           ),
         ),
         FutureBuilder(
-          future: widget.movieService.getFavoriteMovies(),
+          future: widget.movieService.getFavorites(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -64,7 +60,7 @@ class _Favorite extends State<Favorite> {
                             return MovieInfo(snapshot.data[index]);
                           },
                         ),
-                      );
+                      ).then((_) => setState(() {}));
                     },
                     child: FadeInImage.assetNetwork(
                       placeholder: 'assets/images/loading.gif',

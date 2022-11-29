@@ -42,14 +42,14 @@ class _Home extends State<Home> {
           },
         ),
         FutureBuilder(
-          future: widget.movieService.getFirstMovies(),
+          future: widget.movieService.getRandomMovies(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(
                 child: Image.asset('assets/images/loading.gif'),
               );
             } else {
-              return HorizontalCards(snapshot.data, "Films en 4k");
+              return HorizontalCards(snapshot.data, "Films aléatoires");
             }
           },
         ),

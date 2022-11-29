@@ -17,6 +17,7 @@ class MovieInfo extends StatefulWidget {
 }
 
 class _MovieInfo extends State<MovieInfo> {
+  /// Get the dominant color of the image then put it as the background color
   Future<Color> getBgColor() async {
     var paletteGenerator = await PaletteGenerator.fromImageProvider(
       Image.network(widget.movie.poster).image,
@@ -28,6 +29,9 @@ class _MovieInfo extends State<MovieInfo> {
         0.1);
   }
 
+  /// Darken a color
+  /// [color] is the color to darken
+  /// [amount] is the amount to darken the color
   Color darken(Color color, [double amount = .1]) {
     assert(amount >= 0 && amount <= 1);
 
@@ -37,6 +41,7 @@ class _MovieInfo extends State<MovieInfo> {
     return hslDark.toColor();
   }
 
+  /// Search all principal informations about the movie on the movie database TMDB
   Future<void> fetchMoviePreview() async {
     if (widget.movie.previewLink == "") {
       await widget.movie.searchMoviePreviewLink();
@@ -44,12 +49,7 @@ class _MovieInfo extends State<MovieInfo> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchMoviePreview();
-  }
-
+  /// Open the preview link in the browser
   Future<void> _launchURL() async {
     // Mettre a false pour ouvrir le vrai film hihi
     bool showPreview = true;
@@ -69,6 +69,12 @@ class _MovieInfo extends State<MovieInfo> {
         },
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMoviePreview();
   }
 
   @override

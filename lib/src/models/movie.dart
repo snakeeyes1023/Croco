@@ -26,7 +26,7 @@ class Movie {
     }
   }
 
-  //Search for the movie preview link
+  // Search for the movie preview link on the movie database
   Future<void> searchMoviePreviewLink() async {
     if (tmdbMovie == null) {
       await searchOnTheMovieDatabase();
@@ -52,30 +52,6 @@ class Movie {
   @override
   String toString() {
     return 'Movie{title: $title, link: $link, poster: $poster}';
-  }
-
-  /***
-   * To Map
-   */
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'link': link,
-      'poster': poster,
-    };
-  }
-
-  /**
-   * From Map
-   */
-  static Movie fromMap(Map<String, dynamic> map) {
-    return Movie(
-      map['id'],
-      map['title'],
-      map['link'],
-      map['poster'],
-    );
   }
 
   @override

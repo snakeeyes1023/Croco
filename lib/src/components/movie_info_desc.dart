@@ -1,3 +1,4 @@
+import 'package:croco/src/services/favorite_service.dart';
 import 'package:croco/src/services/movie_service.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,9 @@ class MovieInfoDesc extends StatefulWidget {
 
   final Movie movie;
   final MovieService movieService = MovieService();
+  final FavoriteService favoriteService = FavoriteService();
+  bool isFavorite = false;
+  bool isFavoriteLoading = false;
 
   @override
   State<MovieInfoDesc> createState() => _MovieInfoDesc();
@@ -28,10 +32,18 @@ class _MovieInfoDesc extends State<MovieInfoDesc> {
     }
   }
 
+  Future<void> fetchIsFavorite() async {
+    setState(() => widget.isFavoriteLoading = true);
+    widget.isFavorite = await widget.favoriteService.isFavorite(widget.movie);
+    setState(() => widget.isFavoriteLoading = false);
+  }
+
   @override
   void initState() {
     super.initState();
     fetchMovieInfo();
+
+    fetchIsFavorite();
   }
 
   @override
@@ -64,8 +76,20 @@ class _MovieInfoDesc extends State<MovieInfoDesc> {
 
             const Padding(padding: EdgeInsets.only(top: 20.0)),
             //NOTE - Button to add to favorites ( outline button black )
-            CustomButton("+ Add to favorites", Colors.black, false,
-                () => {widget.movieService.addMovieToFavorite(widget.movie)}),
+            CustomButton(
+                widget.isFavoriteLoading
+                    ? "Chargement..."
+                    : widget.isFavorite
+                        ? "Retirer des favoris"
+                        : "Ajouter aux favoris",
+                Colors.black,
+                false,
+                () => {
+                      widget.isFavorite = !widget.isFavorite,
+                      widget.favoriteService
+                          .updateFavorite(widget.movie, widget.isFavorite),
+                      setState(() {})
+                    }),
           ],
         ));
   }

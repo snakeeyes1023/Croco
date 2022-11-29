@@ -1,6 +1,8 @@
 import 'package:croco/src/components/custom_button.dart';
 import 'package:croco/src/components/custom_input.dart';
 import 'package:croco/src/components/custom_plain_button.dart';
+import 'package:croco/src/models/favorite_movie.dart';
+import 'package:croco/src/services/favorite_service.dart';
 import 'package:croco/src/services/synchronizer.dart';
 import 'package:flutter/material.dart';
 import '../../services/movie_service.dart';
@@ -8,7 +10,7 @@ import '../../services/movie_service.dart';
 class Configuration extends StatefulWidget {
   Configuration({super.key});
 
-  MovieService movieService = MovieService();
+  FavoriteService movieService = FavoriteService();
   Synchronizer synchronizer = Synchronizer();
   TextEditingController m3uLinkController = TextEditingController();
 
@@ -78,11 +80,28 @@ class _Configuration extends State<Configuration> {
                   children: [
                     Text("Données utilisateur", style: textStyle),
                     const Padding(padding: EdgeInsets.only(top: 10)),
-                    CustomButton("Supprimer les favoris", Colors.black, true,
-                        () => {widget.movieService.deleteAllFavoriteMovies()}),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    CustomButton("Supprimer le compte", Colors.red, true,
-                        () => {widget.movieService.deleteAllFavoriteMovies()})
+                    CustomButton(
+                        "Supprimer le compte",
+                        Colors.red,
+                        true,
+                        () => {
+                              widget.movieService.deleteAllFavoriteMovies(),
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('Réussi'),
+                                  content: const Text(
+                                      'Tous les favoris ont été supprimés'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            })
                   ],
                 ),
               ),
