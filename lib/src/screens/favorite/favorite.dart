@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/movie_scroll.dart';
 import '../../services/movie_service.dart';
+import '../home/movie_info.dart';
 
 class Favorite extends StatefulWidget {
   Favorite({super.key});
@@ -36,14 +37,45 @@ class _Favorite extends State<Favorite> {
           ),
         ),
         FutureBuilder(
-          future: widget.movieService.getFirstMovies(),
+          future: widget.movieService.getFavoriteMovies(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(
                 child: Image.asset('assets/images/loading.gif'),
               );
             } else {
-              return HorizontalCards(snapshot.data, "Favorie");
+              // grid view with favorite movies 3 columns
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.7,
+                ),
+                itemBuilder: (context, index) {
+                  return Card(
+                      child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) {
+                            return MovieInfo(snapshot.data[index]);
+                          },
+                        ),
+                      );
+                    },
+                    child: FadeInImage.assetNetwork(
+                      placeholder: 'assets/images/loading.gif',
+                      image: snapshot.data[index].poster,
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return Image.asset('assets/images/no-image-icon-4.png');
+                      },
+                    ),
+                  ));
+                },
+              );
             }
           },
         ),

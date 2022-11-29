@@ -46,7 +46,7 @@ class HorizontalCards extends StatelessWidget {
                 placeholder: 'assets/images/loading.gif',
                 image: posterPath,
                 imageErrorBuilder: (context, error, stackTrace) {
-                  return Image.asset('assets/images/loading.gif');
+                  return Image.asset('assets/images/no-image-icon-4.png');
                 },
               ),
             ));

@@ -52,7 +52,7 @@ class _MovieInfo extends State<MovieInfo> {
 
   Future<void> _launchURL() async {
     // Mettre a false pour ouvrir le vrai film hihi
-    bool showPreview = false;
+    bool showPreview = true;
 
     var movieUrl = widget.movie.previewLink;
 
@@ -128,7 +128,6 @@ class _MovieInfo extends State<MovieInfo> {
                             ),
                           ),
                         )),
-                    //button play
                   ]);
                 }
               }),
