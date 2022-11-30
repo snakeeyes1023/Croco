@@ -1,3 +1,4 @@
+import 'package:croco/src/components/play_button.dart';
 import 'package:croco/src/models/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -115,25 +116,8 @@ class _MovieInfo extends State<MovieInfo> {
                     Positioned(
                         top: 220,
                         left: 12,
-                        child: ClipOval(
-                          child: Material(
-                            color: Colors.white,
-                            child: InkWell(
-                              customBorder: const CircleBorder(
-                                  side: BorderSide(
-                                      color: Colors.black, width: 2)),
-                              splashColor: Colors.black, // Splash color
-                              onTap: () {
-                                // open movie preview
-                                _launchURL();
-                              },
-                              child: const SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: Icon(Icons.play_arrow)),
-                            ),
-                          ),
-                        )),
+                        child: PlayButton(
+                            _launchURL, widget.movie.previewLink == "")),
                   ]);
                 }
               }),
