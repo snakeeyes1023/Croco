@@ -14,8 +14,7 @@ class MovieInfoDesc extends StatefulWidget {
   final Movie movie;
   final MovieService movieService = MovieService();
   final FavoriteService favoriteService = FavoriteService();
-  bool isFavorite = false;
-  bool isFavoriteLoading = false;
+  bool? isFavorite;
 
   @override
   State<MovieInfoDesc> createState() => _MovieInfoDesc();
@@ -33,17 +32,18 @@ class _MovieInfoDesc extends State<MovieInfoDesc> {
   }
 
   Future<void> fetchIsFavorite() async {
-    setState(() => widget.isFavoriteLoading = true);
-    widget.isFavorite = await widget.favoriteService.isFavorite(widget.movie);
-    setState(() => widget.isFavoriteLoading = false);
+    await widget.favoriteService
+        .isFavorite(widget.movie)
+        .then((value) => setState(() {
+              widget.isFavorite = value;
+            }));
   }
 
   @override
   void initState() {
     super.initState();
-    fetchMovieInfo();
 
-    fetchIsFavorite();
+    fetchMovieInfo();
   }
 
   @override
@@ -76,20 +76,28 @@ class _MovieInfoDesc extends State<MovieInfoDesc> {
 
             const Padding(padding: EdgeInsets.only(top: 20.0)),
             //NOTE - Button to add to favorites ( outline button black )
-            CustomButton(
-                widget.isFavoriteLoading
-                    ? "Chargement..."
-                    : widget.isFavorite
-                        ? "Retirer des favoris"
-                        : "Ajouter aux favoris",
-                Colors.black,
-                false,
-                () => {
-                      widget.isFavorite = !widget.isFavorite,
-                      widget.favoriteService
-                          .updateFavorite(widget.movie, widget.isFavorite),
-                      setState(() {})
-                    }),
+            FutureBuilder<bool>(
+              future: widget.favoriteService.isFavorite(widget.movie),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  widget.isFavorite = snapshot.data;
+                }
+                return CustomButton(
+                    widget.isFavorite == null
+                        ? "Chargement..."
+                        : widget.isFavorite!
+                            ? "Retirer des favoris"
+                            : "Ajouter aux favoris",
+                    Colors.black,
+                    false,
+                    () => {
+                          widget.isFavorite = !widget.isFavorite!,
+                          widget.favoriteService
+                              .updateFavorite(widget.movie, widget.isFavorite!),
+                          setState(() {})
+                        });
+              },
+            )
           ],
         ));
   }

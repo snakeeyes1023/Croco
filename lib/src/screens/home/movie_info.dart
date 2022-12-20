@@ -6,12 +6,15 @@ import '../../components/movie_info_desc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 
+import '../../services/favorite_service.dart';
 import '../player/player.dart';
 
 class MovieInfo extends StatefulWidget {
   MovieInfo(this.movie, {super.key});
 
   final Movie movie;
+  final FavoriteService favoriteService = FavoriteService();
+  bool? isFavorite;
 
   @override
   _MovieInfo createState() => _MovieInfo();
