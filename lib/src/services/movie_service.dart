@@ -1,13 +1,8 @@
-import 'dart:io';
-import 'package:m3u/m3u.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:mysql1/mysql1.dart';
 import '../models/movie.dart';
-import 'enums/content_type_enum.dart';
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'connection.dart';
 
 class MovieService {
   late ConnectionSettings connectionSettings;
@@ -15,12 +10,7 @@ class MovieService {
   MovieService() {
     WidgetsFlutterBinding.ensureInitialized();
 
-    connectionSettings = ConnectionSettings(
-        host: '70.32.23.53',
-        port: 3306,
-        user: 'jonath37_CrocoBeta',
-        password: '~B~_5@qtzW==',
-        db: 'jonath37_CrocoBeta');
+    connectionSettings = Connection.getRemoteMysqlConnectionSettings();
   }
 
   /// Read the m3u files and return the all movies

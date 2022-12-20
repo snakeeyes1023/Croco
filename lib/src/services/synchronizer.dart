@@ -3,17 +3,13 @@ import 'package:m3u/m3u.dart';
 import 'package:mysql1/mysql1.dart';
 import 'enums/content_type_enum.dart';
 import 'package:dio/dio.dart';
+import 'connection.dart';
 
 class Synchronizer {
   late ConnectionSettings connectionSettings;
 
   Synchronizer() {
-    connectionSettings = ConnectionSettings(
-        host: '70.32.23.53',
-        port: 3306,
-        user: 'jonath37_CrocoBeta',
-        password: '~B~_5@qtzW==',
-        db: 'jonath37_CrocoBeta');
+    connectionSettings = Connection.getRemoteMysqlConnectionSettings();
   }
 
   Future<void> addNewLink(linkM3U) async {

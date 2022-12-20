@@ -1,30 +1,31 @@
-# croco
+# Croco | Player M3U
 
-A new Flutter project.
+Plateforme pour visionner des films à partir d'un fichier .M3U
 
-## Getting Started
+## Installation
 
-This project is a starting point for a Flutter application that follows the
-[simple app state management
-tutorial](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple).
+### Prérequis
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Ce utilise les dernières fonctionnalité d'Android Studio pour permet la lecture du contenue à partir d'un navigatuer web.
 
-## Assets
+Installer API 33
 
-The `assets` directory houses images, fonts, and any other files you want to
-include with your application.
+```bash
+Un émulteur avec la dernière API 33
+```
 
-The `assets/images` directory contains [resolution-aware
-images](https://flutter.dev/docs/development/ui/assets-and-images#resolution-aware).
+![Screenshot](dev/AndroidStudio.png)
 
-## Localization
+Installer les dépendances
 
-This project generates localized messages based on arb files found in
-the `lib/src/localization` directory.
+```bash
+pub get install
+```
 
-To support additional languages, please visit the tutorial on
-[Internationalizing Flutter
-apps](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
+Ajouter les fichiers de configuration
+
+```bash
+cp .env.example .env
+
+# Entrer les informations de la base de données et de TMDB
+```
