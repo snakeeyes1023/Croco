@@ -94,10 +94,17 @@ class FavoriteService {
     return movies;
   }
 
-  Future<void> deleteAllFavoriteMovies() async {
-    // Get a reference to the database.
-    final Database db = await getDatabaseInstance();
+  Future<bool> deleteAllFavoriteMovies() async {
+    try {
+      final Database db = await getDatabaseInstance();
 
-    db.delete(tableFavoriteMovie);
+      db.delete(tableFavoriteMovie);
+
+      return true;
+    } catch (e) {
+      print(e);
+
+      return false;
+    }
   }
 }

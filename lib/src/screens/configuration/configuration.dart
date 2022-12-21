@@ -24,10 +24,58 @@ class _Configuration extends State<Configuration> {
   var textStyle = const TextStyle(
       fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black);
 
+  void removeAllFavorite() async {
+    widget.movieService
+        .deleteAllFavoriteMovies()
+        .then((value) => showDeleteFavoriteMoviesPopup(value));
+  }
+
+  void showDeleteFavoriteMoviesPopup(bool succeeded) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(succeeded ? "Suppression réussie" : "Erreur"),
+            content: Text(succeeded
+                ? "Tous les films favoris ont été supprimés"
+                : "Une erreur est survenue lors de la suppression"),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("OK"))
+            ],
+          );
+        });
+  }
+
+  /// Add a new m3u link to the database
   Future<void> addNewM3uLink() async {
+    widget.synchronizer
+        .addNewLink(widget.m3uLinkController.text)
+        .then((value) => showSyncResultPopup(value));
+
     setState(() => widget.isSynchronizing = true);
-    widget.synchronizer.addNewLink(widget.m3uLinkController.text);
+  }
+
+  /// Show a popup to inform the user about the result of the synchronization
+  void showSyncResultPopup(bool succeeded) {
     setState(() => widget.isSynchronizing = false);
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(succeeded ? "Synchronisation réussie" : "Erreur"),
+            content: Text(succeeded
+                ? "La synchronisation a été effectuée avec succès"
+                : "Une erreur est survenue lors de la synchronisation"),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("OK"))
+            ],
+          );
+        });
   }
 
   @override
@@ -35,6 +83,7 @@ class _Configuration extends State<Configuration> {
     return widget.isSynchronizing
         ? Container(
             color: Colors.grey[300],
+            alignment: Alignment.center,
             width: 70.0,
             height: 70.0,
             child: const Padding(
@@ -80,28 +129,8 @@ class _Configuration extends State<Configuration> {
                   children: [
                     Text("Données utilisateur", style: textStyle),
                     const Padding(padding: EdgeInsets.only(top: 10)),
-                    CustomButton(
-                        "Supprimer le compte",
-                        Colors.red,
-                        true,
-                        () => {
-                              widget.movieService.deleteAllFavoriteMovies(),
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Réussi'),
-                                  content: const Text(
-                                      'Tous les favoris ont été supprimés'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            })
+                    CustomButton("Supprimer le compte", Colors.red, true,
+                        () => {removeAllFavorite()})
                   ],
                 ),
               ),

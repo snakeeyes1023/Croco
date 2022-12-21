@@ -29,3 +29,9 @@ cp .env.example .env
 
 # Entrer les informations de la base de données et de TMDB
 ```
+
+### Comment ajouter un nouveau lien m3U ?
+
+1. Trouver un lien web .m3u (Pour tester utilise : https://mesloc.com/example.m3u)
+
+![Ajoutm3U](dev/AjoutM3u.png)

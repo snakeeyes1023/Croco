@@ -12,14 +12,36 @@ class Synchronizer {
     connectionSettings = Connection.getRemoteMysqlConnectionSettings();
   }
 
-  Future<void> addNewLink(linkM3U) async {
-    var conn = await MySqlConnection.connect(connectionSettings);
+  Future<bool> addNewLink(linkM3U) async {
+    try {
+      if (!(await isValidLink(linkM3U))) {
+        throw Exception("Le lien n'est pas valide");
+      }
 
-    await conn.query('INSERT INTO M3ULink (link) VALUES (?)', linkM3U);
+      var conn = await MySqlConnection.connect(connectionSettings);
 
-    await conn.close();
+      await conn.query('INSERT INTO M3ULink (link) VALUES (?)', [linkM3U]);
 
-    await exportM3u(linkM3U);
+      await conn.close();
+
+      await insertInDb(linkM3U);
+
+      return true;
+    } catch (e) {
+      print("Impossible de syncroniser les films" + e.toString());
+
+      return false;
+    }
+  }
+
+  Future<bool> isValidLink(m3uUrl) async {
+    try {
+      var response = await Dio().get(m3uUrl);
+      return response.statusCode == HttpStatus.ok &&
+          (await M3uParser.parse(response.toString())).isNotEmpty;
+    } catch (e) {
+      return false;
+    }
   }
 
   /// Read the m3u files and return the all movies
@@ -52,9 +74,11 @@ class Synchronizer {
       ContentTypeEnum contentType, List<M3uGenericEntry> contents) {
     if (contentType == ContentTypeEnum.movie) {
       return contents
-          .where((element) => element.attributes["group-title"]!
-              .toLowerCase()
-              .contains('movie'))
+          .where((element) =>
+              element.attributes["group-title"]!
+                  .toLowerCase()
+                  .contains('movie') ||
+              element.link!.toLowerCase().contains('movie'))
           .toList();
     }
 

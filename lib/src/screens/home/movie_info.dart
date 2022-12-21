@@ -3,7 +3,7 @@ import 'package:croco/src/models/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import '../../components/movie_info_desc.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 
 import '../../services/favorite_service.dart';
